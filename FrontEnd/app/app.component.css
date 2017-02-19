@@ -1,0 +1,139 @@
+container-fluid{
+  z-index: 3;
+}
+html, body, my-app{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    margin: 0;
+}
+.app{
+  z-index: -1;
+}
+.container, .projects, .task {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.container{
+  position: absolute !important;
+  width: 100%;
+  bottom: 0;
+  padding-top: 52px !important;
+}
+/*projects*/
+.projects{
+  width: 20%;
+  display: inline-block;
+  float: left;
+  margin-bottom: auto;
+  background-color: #fafafa;
+  border-right: 2px solid #f2f2f2;
+  height: 180%;
+  z-index: -1;
+}
+.hiddenProject{
+  width: 32px;
+  height: 100%;
+  display: inline-block;
+  float: left;
+  margin-bottom: auto;
+  padding: 0;
+  background-color: #fafafa;
+  border-right: 2px solid #f2f2f2;
+}
+.nav-sidebar a {
+    color: #333;
+    -webkit-transition: all 0.08s linear;
+    -moz-transition: all 0.08s linear;
+    -o-transition: all 0.08s linear;
+    transition: all 0.08s linear;
+}
+.nav-sidebar .active a {
+    cursor: default;
+    /*background-color: #0b56a8;*/
+    background-color: rgb(11, 86, 168);
+    color: #fff;
+}
+.nav-sidebar .text-overflow a,
+.nav-sidebar .text-overflow .media-body {
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+/*tasks*/
+.tasks{
+  /*width: auto;*/
+  display: inline-block;
+  width: auto;
+
+}
+/*editor*/
+.editor{
+  width: 25%;
+  height: 180%;
+  float: right;
+  display: inline-block;
+  background-color: #fafafa;
+  border-left: 2.5px solid #f2f2f2;
+  /*margin-bottom: -150px;*/
+  /*padding-bottom: -200px;*/
+
+}
+.hiddenEditor{
+  width: 32px;
+  height: 100%;
+  float: right;
+  display: inline-block;
+  background-color: #fafafa;
+  border-left: 2.5px solid #f2f2f2;
+}
+/*secondary footer*/
+.secondary{
+  display: inline-block;
+}
+.secondary-footer{
+  height: 34px;
+  position: fixed;
+  left:   0;
+  bottom: 40px;
+  width: 100%;
+  background-color: #f2f2f2;
+}
+.projects-footer{
+  width: 20%;
+  float: left;
+  padding: 5px 0 0 5px;
+}
+.projects-btn{
+  width: 24px;
+  height: 24px;
+}
+.tasks-footer{
+  width: 50%;
+}
+.editor-footer{
+  width: auto;
+  float: right;
+  padding: 5px 5px 0 0;
+}
+.editor-btn{
+  width: 24px;
+  height: 24px;
+}
+.btn{
+  background-color: rgba(255, 255, 255, 0);
+}
+/*.projects-footer{
+  vertical-align: bottom;
+  bottom: 20px;
+  right: 0;
+}
+.projects-btn{
+  vertical-align: bottom;
+  bottom: 20px;
+  right: 0;
+
+  float: right;
+}*/

@@ -1,0 +1,92 @@
+<my-header [usertoken] = "usertoken"></my-header>
+<div *ngIf = "usertoken" class = "container app">
+  <div class = "projects nav-sidebar" *ngIf = "hideProject">
+    <Tree [nodes] = "projects" [focused]="true" [options]="options">
+      <template #treeNodeTemplate let-node="node" let-index="index" >
+ <!--       <span (click) = "selectProject(node.data)" [contextMenu]="basicMenu" [contextMenuSubject]="node">{{ node.data.Name }}</span>-->
+        <span (click) = "selectProject(node.data)">{{ node.data.Name }}</span>
+      </template>
+    </Tree>
+    <!--<button type="submit" class="btn btn-default" (click)="openProjectEditor()">Add project</button>
+    <context-menu #basicMenu>
+      <<template contextMenuItem (execute) = "openProjectEditor($event.item.data)">
+        add a child
+      </template>
+      <template contextMenuItem (execute) = "renameProject($event.item.data)">
+        rename
+      </template>
+      <template contextMenuItem (execute) = "deleteProject($event.item.data)">
+        delete
+      </template>
+    </context-menu>-->
+  </div>
+  <div *ngIf = "!hideProject" class = "hiddenProject"></div>
+  <div class = "tasks">
+    <!--<Tree [nodes] = "tasks" [focused]="true" [options]="options">
+      <template #treeNodeTemplate let-node="node" let-index="index" >
+        <span (click) = "selectTask(node.data)" [contextMenu]="otherMenu" [contextMenuSubject]="node">{{ node.data.Title }}</span>
+      </template>
+     </Tree>
+    <button type="submit" class="btn btn-default" (click)="openTaskEditor()" *ngIf = "selectedProject">Add task</button>
+    <context-menu #otherMenu>
+      <template contextMenuItem (execute) = "openTaskEditor($event.item.data)">
+        add a child
+      </template>
+      <template contextMenuItem (execute) = "deleteTask($event.item.data)">
+        delete
+      </template>
+    </context-menu>-->
+    <!--<div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+      <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+      <input #gb type="text" pInputText size="50" placeholder="Filter">
+    </div>-->
+    <p-toolbar>
+      <div class="ui-toolbar-group-left">
+          <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+          <p-autoComplete [(ngModel)]="filterStr" (completeMethod)="filterTasks()" [size]="30"
+            placeholder="Filter"></p-autoComplete>
+      </div>
+      
+      <div class="ui-toolbar-group-right">
+          <!--<button pButton type="button" icon="fa-refresh"></button>-->
+          <button pButton type="button" icon="fa-plus" (click)="openTaskEditor(false)"></button>
+          <button pButton type="button" icon="fa-edit" (click)="openTaskEditor(true)"></button>
+          <button pButton type="button" icon="fa-trash" (click)="deleteTask()"></button>
+      </div>
+    </p-toolbar>
+
+    <p-treeTable [value]="filteredTasks" selectionMode="single" [(selection)]="selectedNode" [style]="{'width':'500px'}"
+      (onNodeSelect)="nodeSelect()">
+      <p-header>Basic</p-header>
+      <p-column field="title" header="Title"></p-column>
+      <p-column field="description" header="Description"></p-column>
+      <!--<p-column field="name" header="Name"></p-column>
+    <p-column field="size" header="Size"></p-column>
+    <p-column field="type" header="Type"></p-column>-->
+    </p-treeTable>
+
+  </div>
+
+  
+  <div class = "editor" *ngIf = "hideEditor" style="margin-bottom: 50px">
+    <task-editor [taskId] = "addingTaskId" [isParentId] = "isAddingChild" [projectId]="selectedProject.Id" (updateList) = "updateTasks($event)" *ngIf = "taskEditor"></task-editor>
+    <!--<project-editor [project] = "selectedProject" (updateList) = "updateProjects($event)" *ngIf = "projectEditor">
+    </project-editor>-->
+
+  </div>
+  <div *ngIf = "!hideEditor" class = "hiddenEditor"></div>
+
+  <div class = "secondary-footer">
+    <div class = "secondary projects-footer">
+      <img (click) = "hideProjects()" src = "./images/p.ico" class = "projects-btn">
+    </div>
+    <div class = "secondary tasks-footer">
+    </div>
+    <div class = "secondary editor-footer">
+      <img (click) = "hideEditors()" src = "./images/e.ico" class = "editor-btn">
+    </div>
+  </div>
+
+</div>
+<sign-in *ngIf = "!usertoken" (setToken) = "setToken($event)"></sign-in>
+<my-footer></my-footer>

@@ -1,0 +1,71 @@
+<div class="container my-modal">
+	<h3 *ngIf="taskId != null && isParentId == false">Edit task {{task.Title}}</h3>
+  <h3 *ngIf="isParentId == true || taskId == null">New task</h3>
+    <form>
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title"
+            required [(ngModel)]="task.Title" name="title">
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" class="form-control" id="description"
+            [(ngModel)]="task.Description" name="description">
+      </div>
+      <div *ngIf="initializedDates">
+      <form [formGroup]="dataForm">
+        <label for="startdate">Started on</label>
+        <ng2-datepicker id="startdate" name="startdate" formControlName="date" [options]="startDateOptions" [(ngModel)]="startDate" required></ng2-datepicker>
+      </form>
+      <form [formGroup]="dataForm">
+        <label for="enddate">Ended on</label>
+        <ng2-datepicker id="enddate" name="enddate" formControlName="date" [options]="endDateOptions" [(ngModel)]="endDate"></ng2-datepicker>
+      </form>
+      <form [formGroup]="dataForm">
+        <label for="estimatedenddate">Estimated ends on</label>
+        <ng2-datepicker id="estimatedenddate" name="estimatedenddate" formControlName="date" [options]="estimatedEndDateOptions" [(ngModel)]="estimatedEndDate"></ng2-datepicker>
+      </form>
+      <form [formGroup]="dataForm">
+        <label for="createddate">Created on</label>
+        <ng2-datepicker id="createddate" name="createddate" formControlName="date" [options]="createdDateOptions" [(ngModel)]="createdDate"></ng2-datepicker>
+      </form>
+      </div>
+ 
+      <div class="form-group">
+        <label for="url">Url</label>
+        <input type="text" class="form-control" id="url"
+            [(ngModel)]="task.Url" name="url">
+      </div>
+      <div class="form-group">
+        <label for="completedPercent">CompletedPercent</label>
+        <input type="number" class="form-control" id="completedPercent"
+            [(ngModel)]="task.CompletedPercent" name="completedPercent">
+      </div>
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" name="status" [(ngModel)]="task.StatusId" required>
+          <option *ngFor="let stat of status" [ngValue]="stat.Id">{{stat.Name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="tasktype">Task Type</label>
+        <select id="tasktype" name="tasktype" [(ngModel)]="task.TaskTypeId" required>
+          <option *ngFor="let type of taskTypes" [ngValue]="type.Id">{{type.Name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="assignedUser">Assigned User</label>
+        <select id="assignedUser" name="assignedUser" [(ngModel)]="task.AssignedUserId">
+          <option *ngFor="let user of users" [ngValue]="user.Id">{{user.UserName}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="user">User</label>
+        <select id="user" name="user" [(ngModel)]="task.UserId" required>
+          <option *ngFor="let user of users" [ngValue]="user.Id">{{user.UserName}}</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn btn-default" (click)="onSubmit()">Save</button>
+    </form>
+</div>
