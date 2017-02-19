@@ -1,0 +1,50 @@
+﻿@model BackEnd.Models.Projects
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Project @Model.Name</h2>
+<h3>Project roles</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <td>Role name</td>
+        <td>Delete</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var pr in @Model.ProjectRoles)
+    {
+        <tr>
+            <td>@pr.Role.Name</td>
+            <td>
+                <form method="post" asp-action="DeleteRole" asp-route-projectId="@Model.Id" asp-route-roleId="@pr.Role.Id">
+                    <input type="submit" value="Delete" class="btn btn-danger"/>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<h3>All roles</h3>
+
+<table class="table">
+    <tr>
+        <th>Role name</th>    
+        <th>Add</th>
+    </tr>
+    @foreach (var role in ViewBag.AllRoles)
+    {
+        <tr>
+            <td>@role.Name</td>
+            <td>
+                <form asp-action="AddRole" method="post" asp-route-projectId="@Model.Id" asp-route-roleId="@role.Id">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                </form>
+            </td>
+        </tr>
+    }
+
+</table>

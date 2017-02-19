@@ -1,0 +1,28 @@
+﻿@model ICollection<BackEnd.Models.Projects>
+
+@{
+    ViewBag.Title = "Projects";
+    Layout = "_Layout";
+}
+
+<h2>Projects</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <td>Project Name</td>
+        <td>Edit</td>
+    </tr>
+    </thead>
+    @foreach (var project in Model)
+    {
+        <tr>
+            <td>@project.Name</td>
+            <td>
+                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@project.Id">
+                    Edit
+                </a>
+            </td>        
+        </tr>       
+    }
+</table>

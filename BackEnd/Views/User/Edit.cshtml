@@ -1,0 +1,25 @@
+﻿@using BackEnd.ViewModels.UserViewModels
+@model BackEnd.ViewModels.UserViewModels.EditUserViewModel
+
+@{
+    ViewBag.Title = "Edit user";
+    Layout = "_Layout";
+}
+
+<h2>Edit user</h2>
+
+<form asp-action="Edit" asp-controller="User" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <input type="hidden" asp-for="Id" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label">Email</label>
+        <input type="text" asp-for="Email" class="form-control" />
+    </div>
+    
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+</form>

@@ -1,0 +1,19 @@
+﻿@model BackEnd.Models.Projects
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>@ViewBag.TestName</h2>
+<ol id="selectable">
+    @foreach (var question in Model)
+    {
+        <li class="ui-widget-content">@question.Role.Name</li>
+    }
+</ol>
+
+<h3>Roles</h3>
+<ol id="rolesList"></ol>
+
+

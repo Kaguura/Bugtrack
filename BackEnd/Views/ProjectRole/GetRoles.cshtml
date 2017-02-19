@@ -1,0 +1,17 @@
+﻿@model BackEnd.Models.Projects
+
+@{
+    ViewBag.Title = "Project";
+    Layout = "_Layout";
+}
+
+<h2>@Model.Name</h2>
+
+<ul>
+    @foreach (var question in Model.ProjectRoles)
+    {
+        <li>@question.Role.Name</li>
+    }
+</ul>
+
+<form asp-action="AddRole" asp-controller="ProjectRole" method="post" asp-route-testId="@Model.Id"></form>

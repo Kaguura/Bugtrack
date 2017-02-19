@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+@model BackEnd.ViewModels.RoleViewModels.ChangeRoleViewModel
+
+@{
+    ViewBag.Title = "Edit roles";
+    Layout = "_Layout";
+}
+
+<h2>Edit roles for @Model.UserEmail</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="userId" value="@Model.UserId" />
+    <div class="form-group">
+        @foreach (var role in Model.AllRoles)
+        {
+            <input type="checkbox" name="roles" value="@role.Name"
+                   @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Sae</button>
+</form>
