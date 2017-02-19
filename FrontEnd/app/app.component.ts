@@ -11,6 +11,7 @@ import { Token } from './_models/token';
 import {TreeNode} from 'primeng/primeng';
 
 import {SigninComponent} from './_components/signin.component';
+import {ConfirmationService} from 'primeng/primeng';
 
 @Component({
   moduleId: module.id,
@@ -28,17 +29,20 @@ export class AppComponent implements OnInit{
   selectedProject: Project;
   hideProject = 1;
   hideEditor = 1;
-  errorMessage: string;
   taskEditor = 0;
   usertoken: Token;
   selectedNode: TreeNode;
   selectedTask: TreeNode;
   isAddingChild: boolean;
   addingTaskId: number;
+  viewTask: boolean;
+  dialogDisplay: boolean;
+  dialogMessage: string;
   
   constructor(
     private projectService: ProjectService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private confirmationService: ConfirmationService
   ){}
   ngOnInit(): void {
     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -50,11 +54,18 @@ export class AppComponent implements OnInit{
   }
   
   getProjects(): void{
-    this.projectService.getProjects(this.usertoken.access_token).subscribe(projects=>this.projects = projects, error =>  this.errorMessage = <any>error);
+    this.projectService.getProjects(this.usertoken.access_token).subscribe(projects=>this.projects = projects,
+                                                                           error=>{
+                                                                             this.dialogMessage = "An error occured while loading projects list";
+                                                                             this.dialogDisplay = true;
+                                                                           });
   }
   getTasks(projectId: number): void{
-    this.taskService.getTasks(projectId).subscribe(tasks=>{ this.tasks = tasks; this.filteredTasks = tasks;});
-    setTimeout(()=>{console.log(JSON.stringify(this.tasks));}, 1000);
+    this.taskService.getTasks(projectId).subscribe(tasks=>{ this.tasks = tasks; this.filteredTasks = tasks;}, error=>{
+                                                                              this.dialogMessage = "An error occured while loading tasks list",
+                                                                              this.dialogDisplay = true;
+                                                                            });
+    //setTimeout(()=>{console.log(JSON.stringify(this.tasks));}, 1000);
   }
   filterTasks() {
     this.filteredTasks = [];
@@ -75,8 +86,22 @@ export class AppComponent implements OnInit{
   }
 
   nodeSelect() {
-    if (this.selectedNode == this.selectedTask) this.selectedNode = null;
-    this.selectedTask = this.selectedNode;
+    if (this.taskEditor && !this.viewTask) {
+      this.confirmationService.confirm({
+            message: 'Do you want to close editor? Changes will not be saved.',
+            accept: () => {
+                this.taskEditor = 0;
+                this.selectedTask = this.selectedNode;
+            },
+            reject: () => {
+              this.selectedNode = this.selectedTask;
+            }
+        });
+    }
+    else {
+      if (this.selectedNode == this.selectedTask) this.selectedNode = null;
+      this.selectedTask = this.selectedNode;
+    }
   }
 
   selectProject(pr: Project): void{
@@ -86,17 +111,46 @@ export class AppComponent implements OnInit{
     this.getTasks(pr.Id);
   }
 
-  openTaskEditor(edit: boolean): void{
+  openTaskEditor(edit: boolean, view: boolean): void{
+    if (this.taskEditor && !this.viewTask) {
+      this.confirmationService.confirm({
+          message: 'Do you want to close editor? Changes will not be saved.',
+          accept: () => {
+            this.taskEditor = 0;
+            setTimeout(()=>{this.setTaskEditorParams(edit, view)},100);
+          }
+      });
+    }
+    else {
+      this.taskEditor = 0;
+      setTimeout(()=>{this.setTaskEditorParams(edit, view)},100);
+    }
+  }
+
+  setTaskEditorParams(edit: boolean, view: boolean) {
     this.isAddingChild = false;
     this.addingTaskId = null;
-    if (edit && !this.selectedTask) return;
-    if (!edit && this.selectedTask) this.isAddingChild = true;
+    this.viewTask = view;
+    if (!this.selectedTask && (edit || view)) {
+      this.dialogMessage = "Select a task, please";
+      this.dialogDisplay = true;
+      return;
+    }
+    if (!view && !edit && this.selectedTask) this.isAddingChild = true;
     if (this.selectedTask) this.addingTaskId = this.selectedTask.data.id;
     this.taskEditor = 1;
   }
-  deleteTask(): void{
-    this.taskService.deleteTask(this.selectedTask.data.id);
-    setTimeout(()=>{this.getTasks(this.selectedProject.Id);}, 100);
+
+  deleteTask(): void {
+    this.confirmationService.confirm({
+        message: 'Are you sure you want to delete this task?',
+        accept: () => {
+          this.taskEditor = 0;
+          this.taskService.deleteTask(this.selectedTask.data.id).subscribe(res => {this.getTasks(this.selectedProject.Id)},
+                                                                           err => {this.dialogMessage = "Failed to delete";
+                                                                             this.dialogDisplay = true;});
+        }
+    });    
   }
   
   hideProjects(): void{
@@ -139,7 +193,16 @@ export class AppComponent implements OnInit{
     this.projectService.deleteProject(project);
   }*/
   
-  updateTasks(str: string): void {
+  updateTasks(message: string): void {
+    if (message == "Cancel") {
+      this.taskEditor = 0;
+      return;
+    }
+    this.dialogMessage = message;
+    this.dialogDisplay = true;
+    if (message.indexOf("Failed") >= 0) {
+      return;
+    }
     this.taskEditor = 0;
     setTimeout(()=>{this.getTasks(this.selectedProject.Id);}, 100);
   }
@@ -149,5 +212,11 @@ export class AppComponent implements OnInit{
     localStorage.setItem('currentUser', JSON.stringify(token));
     console.log(this.usertoken, this.usertoken.access_token);
     this.getProjects();
+    setTimeout(()=>{
+      this.dialogMessage = "Your session have been expired. Please, sing in again.";
+      this.dialogDisplay = true;
+      this.usertoken = null;
+      localStorage.removeItem("currentUser");
+    }, 1800000);
   }
 }

@@ -25,7 +25,8 @@ import { TaskService } from './_services/task.service';
 import { SigninService } from './_services/signin.service';
 import { ProjecteditorComponent } from './_components/projecteditor.component';
 import { TaskeditorComponent } from './_components/taskeditor.component';
-import {TreeTableModule,ToolbarModule, InputTextModule, ButtonModule, AutoCompleteModule} from 'primeng/primeng';
+import {TreeTableModule,ToolbarModule, ButtonModule, AutoCompleteModule, MessagesModule, 
+  DialogModule, TooltipModule, ConfirmDialogModule,ConfirmationService} from 'primeng/primeng';
 
 import { DatePickerModule } from 'ng2-datepicker';
 
@@ -42,9 +43,12 @@ import { DatePickerModule } from 'ng2-datepicker';
     DatePickerModule,
     TreeTableModule,
     ToolbarModule,
-    InputTextModule,
     ButtonModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    MessagesModule,
+    DialogModule,
+    TooltipModule,
+    ConfirmDialogModule
     // AppRoutingModule
   ],
   declarations: [
@@ -56,7 +60,7 @@ import { DatePickerModule } from 'ng2-datepicker';
     SigninComponent
     // ContextMenuComponent
   ],
-  providers: [ProjectService, TaskService, SigninService],
+  providers: [ProjectService, TaskService, SigninService, ConfirmationService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

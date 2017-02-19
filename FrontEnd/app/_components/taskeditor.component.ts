@@ -21,6 +21,7 @@ import * as moment from 'moment';
 export class TaskeditorComponent implements OnInit{
 	@Input('taskId') taskId: number;
   @Input('isParentId') isParentId: boolean;
+  @Input('viewTask') viewTask: boolean;
   @Input() projectId: number;
   @Output() updateList: EventEmitter<string> = new EventEmitter<string>();
 	errorMessage: string;
@@ -111,14 +112,17 @@ export class TaskeditorComponent implements OnInit{
       this.task.CreatedOn = this.startDate.momentObj.utc(true).toDate();
      
  		if (!this.taskId || this.isParentId) {
-       this.taskService.addTask(this.task);
-       this.updateList.emit("");
+       this.taskService.addTask(this.task).subscribe(res=>{this.updateList.emit("Successfully saved.");},
+                                                     err=>{this.updateList.emit("Failed to add new task.");});
     }
  		else {
-       this.taskService.editTask(this.task);
-       this.updateList.emit("");
+       this.taskService.editTask(this.task).subscribe(res=>{this.updateList.emit("Successfully saved.");},
+                                                     err=>{this.updateList.emit("Failed to save changes.");});
      }
-     //alert
  	}
+
+  cancel() {
+    this.updateList.emit("Cancel");
+  }
 
 }

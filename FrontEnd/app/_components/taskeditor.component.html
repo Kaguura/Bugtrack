@@ -1,20 +1,21 @@
 <div class="container my-modal">
-	<h3 *ngIf="taskId != null && isParentId == false">Edit task {{task.Title}}</h3>
-  <h3 *ngIf="isParentId == true || taskId == null">New task</h3>
-    <form>
+  <h3 *ngIf="viewTask">{{task.Title}} details</h3>
+	<h3 *ngIf="!viewTask && (taskId != null && isParentId == false)">Edit task {{task.Title}}</h3>
+  <h3 *ngIf="!viewTask && (isParentId == true || taskId == null)">New task</h3>
+    <form (ngSubmit)="onSubmit()" #myForm="ngForm">
       <div class="form-group">
-        <label for="title">Title</label>
+        <label for="title">Title*</label>
         <input type="text" class="form-control" id="title"
-            required [(ngModel)]="task.Title" name="title">
+            required [(ngModel)]="task.Title" name="title" [readOnly]="viewTask">
       </div>
       <div class="form-group">
         <label for="description">Description</label>
         <input type="text" class="form-control" id="description"
-            [(ngModel)]="task.Description" name="description">
+            [(ngModel)]="task.Description" name="description" [readOnly]="viewTask">
       </div>
       <div *ngIf="initializedDates">
       <form [formGroup]="dataForm">
-        <label for="startdate">Started on</label>
+        <label for="startdate">Started on*</label>
         <ng2-datepicker id="startdate" name="startdate" formControlName="date" [options]="startDateOptions" [(ngModel)]="startDate" required></ng2-datepicker>
       </form>
       <form [formGroup]="dataForm">
@@ -34,38 +35,39 @@
       <div class="form-group">
         <label for="url">Url</label>
         <input type="text" class="form-control" id="url"
-            [(ngModel)]="task.Url" name="url">
+            [(ngModel)]="task.Url" name="url" [readOnly]="viewTask">
       </div>
       <div class="form-group">
         <label for="completedPercent">CompletedPercent</label>
         <input type="number" class="form-control" id="completedPercent"
-            [(ngModel)]="task.CompletedPercent" name="completedPercent">
+            [(ngModel)]="task.CompletedPercent" name="completedPercent" [readOnly]="viewTask">
       </div>
       <div class="form-group">
-        <label for="status">Status</label>
-        <select id="status" name="status" [(ngModel)]="task.StatusId" required>
+        <label for="status">Status*</label>
+        <select id="status" name="status" [(ngModel)]="task.StatusId" required [disabled]="viewTask">
           <option *ngFor="let stat of status" [ngValue]="stat.Id">{{stat.Name}}</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="tasktype">Task Type</label>
-        <select id="tasktype" name="tasktype" [(ngModel)]="task.TaskTypeId" required>
+        <label for="tasktype">Task Type*</label>
+        <select id="tasktype" name="tasktype" [(ngModel)]="task.TaskTypeId" required [disabled]="viewTask">
           <option *ngFor="let type of taskTypes" [ngValue]="type.Id">{{type.Name}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="assignedUser">Assigned User</label>
-        <select id="assignedUser" name="assignedUser" [(ngModel)]="task.AssignedUserId">
+        <select id="assignedUser" name="assignedUser" [(ngModel)]="task.AssignedUserId" [disabled]="viewTask">
           <option *ngFor="let user of users" [ngValue]="user.Id">{{user.UserName}}</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="user">User</label>
-        <select id="user" name="user" [(ngModel)]="task.UserId" required>
+        <label for="user">User*</label>
+        <select id="user" name="user" [(ngModel)]="task.UserId" required [disabled]="viewTask">
           <option *ngFor="let user of users" [ngValue]="user.Id">{{user.UserName}}</option>
         </select>
       </div>
       
-      <button type="submit" class="btn btn-default" (click)="onSubmit()">Save</button>
+      <button type="submit" class="btn btn-default" *ngIf="!viewTask" [disabled]="!myForm.form.valid">Save</button>
+      <button class="btn btn-default" (click)="cancel()">Cancel</button>
     </form>
 </div>

@@ -6,6 +6,7 @@ import {ProjectService} from '../_services/project.service';
 import {SigninService} from '../_services/signin.service';
 import { Token } from '../_models/token';
 import {Response} from '@angular/http';
+import { Message } from 'primeng/primeng';
 
 @Component({ 
   moduleId: module.id,
@@ -18,6 +19,7 @@ export class SigninComponent implements OnInit{
 	usertoken: Token;
   @Output() setToken: EventEmitter<Token> = new EventEmitter<Token>();
   errorMessage: string;
+  msgs: Message[] = [];
 
 	constructor(
       private projectService: ProjectService,
@@ -27,13 +29,18 @@ export class SigninComponent implements OnInit{
  	ngOnInit(): void{
  	}
  	signIn(username: string, password: string){
+    this.msgs = [];
  		// console.log(username);
  		// console.log(password);
     this.signinService.signin(username, password).subscribe(
                 res => {this.usertoken = res;
+                this.msgs.push({severity:'success', summary:'Success', detail:'Redirecting...'});
                 console.log(JSON.stringify(this.usertoken));
                 this.setToken.emit(this.usertoken)},
-                error => console.log(JSON.stringify(error))
+                error => {
+                  if (error == 400) this.msgs.push({severity:'error', summary:'Error', detail:'Invalid login or password'});
+                  else this.msgs.push({severity:'error', summary:'Error', detail:'Connection refused'});
+                }
             );
  		//this.usertoken = this.signinService.signin(username, password);
  	}

@@ -53,7 +53,7 @@ export class TaskService {
                   .catch(this.handleError);
   }
 
-  addTask(task: Task) {
+  addTask(task: Task): Observable<string> {
     var req = JSON.stringify(task, ['Id', 'Title', 'StartedOn', 'EndedOn', 'Url',
                                     'StatusId', 'TaskTypeId', 'AssignedUserId',
                                     'EstimatedEndsOn', 'UserId', 'ParentTaskId',
@@ -64,10 +64,10 @@ export class TaskService {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     
-    this.http.post(this.taskDetailsUrl + "/addtask", req, options)
-                  .map((res: Response) => res).subscribe(res => {});
+    return this.http.post(this.taskDetailsUrl + "/addtask", req, options)
+                  .map((res: Response) => res).catch(this.handleError);
   }
-  editTask(task: Task) {
+  editTask(task: Task): Observable<string> {
     var req = JSON.stringify(task, ['Id', 'Title', 'StartedOn', 'EndedOn', 'Url',
                                     'StatusId', 'TaskTypeId', 'AssingedUserId',
                                     'EstimatedEndsOn', 'UserId', 'ParentTaskId',
@@ -78,16 +78,16 @@ export class TaskService {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     
-    this.http.put(this.taskDetailsUrl + "/edittask/" + task.Id, req, options)
-                  .map((res: Response) => res.json()).subscribe(res => {});
+    return this.http.put(this.taskDetailsUrl + "/edittask/" + task.Id, req, options)
+                  .map((res: Response) => res).catch(this.handleError);
   }
   
-  deleteTask(taskId: number) {
+  deleteTask(taskId: number): Observable<string> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     
-    this.http.delete(this.tasksUrl + "/deletetask/" + taskId, options)
-                  .map((res: Response) => res.json()).subscribe(res => {});
+    return this.http.delete(this.tasksUrl + "/deletetask/" + taskId, options)
+                  .map((res: Response) => res).catch(this.handleError);
   }
   
   private extractData(res: Response) {

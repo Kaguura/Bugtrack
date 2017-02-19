@@ -1,4 +1,13 @@
 <my-header [usertoken] = "usertoken"></my-header>
+<p-dialog header="Info" [(visible)]="dialogDisplay" modal="modal" width="300" responsive="true">
+    <p>{{dialogMessage}}</p>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <button type="button" pButton (click)="dialogDisplay=false" label="Ok"></button>
+      </div>
+    </p-footer>
+</p-dialog>
+<p-confirmDialog width="425"></p-confirmDialog>
 <div *ngIf = "usertoken" class = "container app">
   <div class = "projects nav-sidebar" *ngIf = "hideProject">
     <Tree [nodes] = "projects" [focused]="true" [options]="options">
@@ -21,7 +30,7 @@
     </context-menu>-->
   </div>
   <div *ngIf = "!hideProject" class = "hiddenProject"></div>
-  <div class = "tasks">
+  <div class = "tasks" *ngIf="selectedProject">
     <!--<Tree [nodes] = "tasks" [focused]="true" [options]="options">
       <template #treeNodeTemplate let-node="node" let-index="index" >
         <span (click) = "selectTask(node.data)" [contextMenu]="otherMenu" [contextMenuSubject]="node">{{ node.data.Title }}</span>
@@ -49,9 +58,10 @@
       
       <div class="ui-toolbar-group-right">
           <!--<button pButton type="button" icon="fa-refresh"></button>-->
-          <button pButton type="button" icon="fa-plus" (click)="openTaskEditor(false)"></button>
-          <button pButton type="button" icon="fa-edit" (click)="openTaskEditor(true)"></button>
-          <button pButton type="button" icon="fa-trash" (click)="deleteTask()"></button>
+          <button pButton type="button" icon="fa-plus" (click)="openTaskEditor(false, false)" pTooltip="New task" tooltipPosition="bottom"></button>
+          <button pButton type="button" icon="fa-eye" (click)="openTaskEditor(false, true)" pTooltip="View details" tooltipPosition="bottom"></button>
+          <button pButton type="button" icon="fa-edit" (click)="openTaskEditor(true, false)" pTooltip="Edit" tooltipPosition="bottom"></button>
+          <button pButton type="button" icon="fa-trash" (click)="deleteTask()" pTooltip="Delete" tooltipPosition="bottom"></button>
       </div>
     </p-toolbar>
 
@@ -69,7 +79,7 @@
 
   
   <div class = "editor" *ngIf = "hideEditor" style="margin-bottom: 50px">
-    <task-editor [taskId] = "addingTaskId" [isParentId] = "isAddingChild" [projectId]="selectedProject.Id" (updateList) = "updateTasks($event)" *ngIf = "taskEditor"></task-editor>
+    <task-editor [taskId] = "addingTaskId" [isParentId] = "isAddingChild" [viewTask] = "viewTask" [projectId]="selectedProject.Id" (updateList) = "updateTasks($event)" *ngIf = "taskEditor"></task-editor>
     <!--<project-editor [project] = "selectedProject" (updateList) = "updateProjects($event)" *ngIf = "projectEditor">
     </project-editor>-->
 
